@@ -5,8 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:nResult_task"
         xmlns:vm="clr-namespace:nResult_task.ViewModel"
+        WindowStartupLocation="CenterScreen"
         mc:Ignorable="d"
-        Title="MainWindow" Height="auto" Width="auto">
+        Title="MainWindow" Height="600" Width="900">
     <Window.DataContext>
         <vm:MainViewModel></vm:MainViewModel>
     </Window.DataContext>
@@ -15,12 +16,15 @@
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
 
-        <Button Grid.Row="0" Command="{Binding OpenFileCommand}" HorizontalAlignment="Left" Margin="5">Choose File</Button>
+        <Button Grid.Row="0" Command="{Binding Path=OpenFileCommand}" HorizontalAlignment="Left" Margin="5">Choose File</Button>
 
 
-        <DataGrid Grid.Row="1" Visibility="{Binding Path=DataGridVisibility, UpdateSourceTrigger=PropertyChanged}" AutoGenerateColumns="False" ItemsSource="{Binding Path=Customers,UpdateSourceTrigger=PropertyChanged}" >
+        <!--<DataGrid Grid.Row="1" Visibility="{Binding Path=DataGridVisibility, UpdateSourceTrigger=PropertyChanged}" 
+                  AutoGenerateColumns="True"
+                  ItemsSource="{Binding Path=BindedCustomersList,UpdateSourceTrigger=PropertyChanged}" >
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Gender" Binding="{Binding Gender}"/>
                 <DataGridTextColumn Header="Title" Binding="{Binding Title}"/>
@@ -32,10 +36,32 @@
                 <DataGridTextColumn Header="BloodType" Binding="{Binding BloodType}"/>
                 <DataGridTextColumn Header="EmailAddress" Binding="{Binding EmailAddress}" />
             </DataGrid.Columns>
-        </DataGrid>
-        <!--<DataGrid Grid.Row="1" AutoGenerateColumns="True" ItemsSource="{Binding Path=Customers,UpdateSourceTrigger=PropertyChanged}" >
-            
         </DataGrid>-->
+        <DataGrid Visibility="{Binding Path=DataGridVisibility, UpdateSourceTrigger=PropertyChanged}"  Grid.Row="1" AutoGenerateColumns="True" ItemsSource="{Binding Path=BindedCustomersList,UpdateSourceTrigger=PropertyChanged}" >
+            
+        </DataGrid>
+
+        <Grid Grid.Row="2" Width="300" Visibility="{Binding Path=DataGridVisibility, UpdateSourceTrigger=PropertyChanged}">
+            <Button Height="23" HorizontalAlignment="Left" Name="BtnFirst" VerticalAlignment="Bottom"
+                    Width="40" Content="&lt;&lt;" Command="{Binding Path=FirstPageCommand}" Opacity="0.75"/>
+
+            <Button Height="23" Margin="0 0 150 0"  VerticalAlignment="Bottom" Name="BtnPrev" Width="40"
+                    Command="{Binding Path=PreviousePageCommand}" 
+                    IsEnabled="{Binding Path=PrevEnabled}" Opacity="0.75" Content="&lt;"/>
+            
+            <Label x:Name="LblpageInformation" HorizontalContentAlignment="Center" 
+                HorizontalAlignment="Center" Height="30" Width="100" Content="{Binding Path=PageIndex, UpdateSourceTrigger=PropertyChanged}"
+                VerticalContentAlignment="Center" VerticalAlignment="Bottom"/>
+            
+            
+            <Button Height="23" HorizontalAlignment="Right" Name="BtnNext" VerticalAlignment="Bottom" 
+                 Margin="0 0 50 0"   Width="40" Content="&gt;" Command="{Binding Path=NextPageCommand}" 
+                   IsEnabled="{Binding Path=NextEnabled}" Opacity="0.75"/>
+            
+            <Button Height="23" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="40"
+                    Name="BtnLast" Command="{Binding Path=LastPageCommand}" Opacity="0.75" Content="&gt;&gt;"/>
+                        
+        </Grid>
 
     </Grid>
     

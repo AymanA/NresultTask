@@ -16,6 +16,21 @@ namespace nResult_task.ViewModel
 {
     class MainViewModel : ViewModelBase
     {
+
+        private IList<Customer> _bindedCustomersList;
+        public IList<Customer> BindedCustomersList
+        {
+            get { return _bindedCustomersList; }
+            set
+            {
+                if (value != _bindedCustomersList)
+                {
+                    _bindedCustomersList = value;
+                    NotifyPropertyChanged("BindedCustomersList");
+                }
+            }
+        }
+
         private ObservableCollection<Customer> _customers;
         public ObservableCollection<Customer> Customers
         {
@@ -48,23 +63,165 @@ namespace nResult_task.ViewModel
             }
         }
 
-        private ICommand openFileCommand;
-        public ICommand OpenFileCommand
+
+
+        #region navigation
+
+        private string _pageIndex;
+
+        public string PageIndex
+        {
+            get { return _pageIndex; }
+            set
+            {
+                _pageIndex = value;
+                NotifyPropertyChanged("PageIndex");
+
+            }
+        }
+
+        private int _currentPageIndex;
+
+        public int CurrentPageIndex
+        {
+            get { return _currentPageIndex; }
+            set
+            {
+                _currentPageIndex = value;
+                UpdatePageIndex(value);
+                NotifyPropertyChanged("CurrentPageIndex");
+            }
+        }
+
+        private int _pagesCount;
+
+        public int PagesCount
+        {
+            get { return _pagesCount; }
+            set
+            {
+                _pagesCount = value;
+                NotifyPropertyChanged("PagesCount");
+            }
+        }
+
+        private int _pageSize = 20;
+
+        public int PageSize
+        {
+            get { return _pageSize; }
+            set
+            {
+                _pageSize = value;
+                NotifyPropertyChanged("PageSize");
+            }
+        }
+
+        private bool _prevEnabled = false;
+        public bool PrevEnabled
         {
             get
             {
-                return openFileCommand;
+                return _prevEnabled;
             }
+
             set
             {
-                openFileCommand = value;
+                _prevEnabled = value;
+                NotifyPropertyChanged("PrevEnabled");
             }
         }
+
+        private bool _nextEnabled = true;
+        public bool NextEnabled
+        {
+            get
+            {
+                return _nextEnabled;
+            }
+
+            set
+            {
+                _nextEnabled = value;
+                NotifyPropertyChanged("NextEnabled");
+            }
+        }
+
+        #endregion
+
+
+        #region Commands 
+        public ICommand FirstPageCommand { get; set; }
+        public ICommand LastPageCommand { get; set; }
+
+        public ICommand PreviousePageCommand { get; set; }
+        public ICommand NextPageCommand { get; set; }
+
+        public ICommand OpenFileCommand { get; set; }
+
+        #endregion
+
+
 
         public MainViewModel()
         {
            //Customers = GetCustomers();
             OpenFileCommand = new RelayCommand(OpenFile, (param)=> true);
+            FirstPageCommand = new RelayCommand(LoadFirstPage, (param)=> true);
+            LastPageCommand = new RelayCommand(LoadLastPage, (param)=> true);
+            PreviousePageCommand = new RelayCommand(LoadPreviousePage, (param)=> true);
+            NextPageCommand = new RelayCommand(LoadNextPage, (param)=> true);
+        }
+
+        private void LoadLastPage(object obj)
+        {
+            
+            if (CurrentPageIndex != PagesCount)
+            {
+                CurrentPageIndex = PagesCount - 1;
+                BindedCustomersList = GetPage(Customers, CurrentPageIndex, PageSize);
+                NextEnabled = false;
+            }
+        }
+
+        private void LoadNextPage(object obj)
+        {
+            CurrentPageIndex++;
+            BindedCustomersList = GetPage(Customers, CurrentPageIndex, PageSize);
+            PrevEnabled = true;
+            if (CurrentPageIndex == PagesCount)
+            {
+                NextEnabled = false;
+            }
+
+        }
+
+        private void LoadPreviousePage(object obj)
+        {
+            CurrentPageIndex--;
+            BindedCustomersList = GetPage(Customers, CurrentPageIndex, PageSize);
+            if (CurrentPageIndex == 0)
+            {
+                PrevEnabled = false;
+            }
+        }
+
+        private void LoadFirstPage(object obj)
+        {
+            if (CurrentPageIndex != 0)
+            {
+                CurrentPageIndex = 0;
+                BindedCustomersList = GetPage(Customers, CurrentPageIndex, PageSize);
+                NextEnabled = true;
+                PrevEnabled = false;
+            }
+            
+        }
+
+        private void UpdatePageIndex(int index)
+        {
+            var cureentIndex = index++;
+            PageIndex = cureentIndex + " of " + PagesCount;
         }
 
         private void OpenFile(object obj)
@@ -75,50 +232,50 @@ namespace nResult_task.ViewModel
             //using (var streamReader = new StreamReader("E:\\nresult-task\\CodeInterview/Interview Name List.csv"))
             using (var streamReader = new StreamReader("E:\\nresult-task\\CodeInterview/test.csv"))
             {
+                string headerLine = streamReader.ReadLine();
                 // browse the csv file line by line until the end of the file
                 while (!streamReader.EndOfStream)
                 {
-                    // for each line, split it with the split caractere (that may no be ';')
-                    var splitLine = streamReader.ReadLine().Split(',');
-
-                    // map the splitted line with an entity
-                    var myNewCustomer = new Customer()
+                    // for each line, split it with the split caractere (that may no be ',')
+                    var readLine = streamReader.ReadLine();
+                    if (readLine != null)
                     {
-                        Gender = splitLine[0].Trim(),
-                        Title = splitLine[1].Trim(),
-                        Occupation = splitLine[2].Trim(),
-                        Company = splitLine[3].Trim(),
-                        GivenName = splitLine[4].Trim(),
-                        MiddleInitial = splitLine[5].Trim(),
-                        Surname = splitLine[6].Trim(),
-                        BloodType = splitLine[7].Trim(),
-                        EmailAddress = splitLine[8].Trim(),
-                    };
+                        var splitLine = readLine.Split(',');
 
-                    // add the entity  in the list
-                    myList.Add(myNewCustomer);
+                        // map the splitted line with an entity
+                        var myNewCustomer = new Customer()
+                        {
+                            Gender = splitLine[0].Trim(),
+                            Title = splitLine[1].Trim(),
+                            Occupation = splitLine[2].Trim(),
+                            Company = splitLine[3].Trim(),
+                            GivenName = splitLine[4].Trim(),
+                            MiddleInitial = splitLine[5].Trim(),
+                            Surname = splitLine[6].Trim(),
+                            BloodType = splitLine[7].Trim(),
+                            EmailAddress = splitLine[8].Trim(),
+                        };
+
+                        // add the entity  in the list
+                        myList.Add(myNewCustomer);
+                    }
                 }
                 streamReader.Close();
             }
 
             // Convert the list into an observable collection
             Customers = new ObservableCollection<Customer>(myList);
+            PagesCount = Customers.Count/20;
+            CurrentPageIndex = 0;
+            BindedCustomersList = GetPage(Customers, CurrentPageIndex, PageSize);
             DataGridVisibility = "Visible";
         }
 
-      
-        //private ObservableCollection<Customer> GetCustomers()
-        //{
-        //    //string[] lines = File.ReadAllLines(System.IO.Path.ChangeExtension(fileName, ".csv"));
 
-        //    //// lines.Select allows me to project each line as a Person. 
-        //    //// This will give me an IEnumerable<Person> back.
-        //    //return lines.Select(line =>
-        //    //{
-        //    //    string[] data = line.Split(';');
-        //    //    // We return a person with the data in order.
-        //    //    return new Customer(data[0], data[1], Convert.ToInt32(data[2]), data[3]);
-        //    //});
-        //}
+        IList<Customer> GetPage(ObservableCollection<Customer> list, int page, int pageSize)
+        {
+            return list.Skip(page * pageSize).Take(pageSize).ToList();
+        }
+
     }
 }
