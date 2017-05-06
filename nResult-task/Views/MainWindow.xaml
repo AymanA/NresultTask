@@ -43,7 +43,8 @@
 
         <Grid Grid.Row="2" Width="300" Visibility="{Binding Path=DataGridVisibility, UpdateSourceTrigger=PropertyChanged}">
             <Button Height="23" HorizontalAlignment="Left" Name="BtnFirst" VerticalAlignment="Bottom"
-                    Width="40" Content="&lt;&lt;" Command="{Binding Path=FirstPageCommand}" Opacity="0.75"/>
+                    Width="40" Content="&lt;&lt;" Command="{Binding Path=FirstPageCommand}"
+                    IsEnabled="{Binding Path=FirstEnabled}" Opacity="0.75"/>
 
             <Button Height="23" Margin="0 0 150 0"  VerticalAlignment="Bottom" Name="BtnPrev" Width="40"
                     Command="{Binding Path=PreviousePageCommand}" 
@@ -59,7 +60,8 @@
                    IsEnabled="{Binding Path=NextEnabled}" Opacity="0.75"/>
             
             <Button Height="23" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="40"
-                    Name="BtnLast" Command="{Binding Path=LastPageCommand}" Opacity="0.75" Content="&gt;&gt;"/>
+                    Name="BtnLast" Command="{Binding Path=LastPageCommand}" Opacity="0.75"
+                    IsEnabled="{Binding Path=LastEnabled}" Content="&gt;&gt;"/>
                         
         </Grid>
 

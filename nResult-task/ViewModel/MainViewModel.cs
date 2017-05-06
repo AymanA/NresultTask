@@ -147,6 +147,36 @@ namespace nResult_task.ViewModel
             }
         }
 
+        private bool _firstEnabled = false;
+        public bool FirstEnabled
+        {
+            get
+            {
+                return _firstEnabled;
+            }
+
+            set
+            {
+                _firstEnabled = value;
+                NotifyPropertyChanged("FirstEnabled");
+            }
+        }
+
+        private bool _lastEnabled = true;
+        public bool LastEnabled
+        {
+            get
+            {
+                return _lastEnabled;
+            }
+
+            set
+            {
+                _lastEnabled = value;
+                NotifyPropertyChanged("LastEnabled");
+            }
+        }
+
         #endregion
 
 
@@ -178,9 +208,12 @@ namespace nResult_task.ViewModel
             
             if (CurrentPageIndex != PagesCount)
             {
-                CurrentPageIndex = PagesCount - 1;
+                CurrentPageIndex = PagesCount;
                 BindedCustomersList = GetPage(Customers, CurrentPageIndex, PageSize);
                 NextEnabled = false;
+                LastEnabled = false;
+                FirstEnabled = true;
+                PrevEnabled = true;
             }
         }
 
@@ -189,9 +222,11 @@ namespace nResult_task.ViewModel
             CurrentPageIndex++;
             BindedCustomersList = GetPage(Customers, CurrentPageIndex, PageSize);
             PrevEnabled = true;
+            FirstEnabled = true;
             if (CurrentPageIndex == PagesCount)
             {
                 NextEnabled = false;
+                LastEnabled = false;
             }
 
         }
@@ -200,9 +235,12 @@ namespace nResult_task.ViewModel
         {
             CurrentPageIndex--;
             BindedCustomersList = GetPage(Customers, CurrentPageIndex, PageSize);
+            NextEnabled = true;
+            LastEnabled = true;
             if (CurrentPageIndex == 0)
             {
                 PrevEnabled = false;
+                FirstEnabled = false;
             }
         }
 
@@ -213,7 +251,9 @@ namespace nResult_task.ViewModel
                 CurrentPageIndex = 0;
                 BindedCustomersList = GetPage(Customers, CurrentPageIndex, PageSize);
                 NextEnabled = true;
+                LastEnabled = true;
                 PrevEnabled = false;
+                FirstEnabled = false;
             }
             
         }
