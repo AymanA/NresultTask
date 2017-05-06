@@ -1,0 +1,15 @@
+E:\c#_workspace\projects\nResult-task\nResult-task\bin\Debug\nResult-task.exe.config
+E:\c#_workspace\projects\nResult-task\nResult-task\bin\Debug\nResult-task.exe
+E:\c#_workspace\projects\nResult-task\nResult-task\bin\Debug\nResult-task.pdb
+E:\c#_workspace\projects\nResult-task\nResult-task\obj\Debug\nResult-task.csprojResolveAssemblyReference.cache
+E:\c#_workspace\projects\nResult-task\nResult-task\obj\Debug\Views\MainWindow.g.cs
+E:\c#_workspace\projects\nResult-task\nResult-task\obj\Debug\App.g.cs
+E:\c#_workspace\projects\nResult-task\nResult-task\obj\Debug\GeneratedInternalTypeHelper.g.cs
+E:\c#_workspace\projects\nResult-task\nResult-task\obj\Debug\nResult-task_MarkupCompile.cache
+E:\c#_workspace\projects\nResult-task\nResult-task\obj\Debug\nResult-task_MarkupCompile.lref
+E:\c#_workspace\projects\nResult-task\nResult-task\obj\Debug\Views\MainWindow.baml
+E:\c#_workspace\projects\nResult-task\nResult-task\obj\Debug\nResult-task.g.resources
+E:\c#_workspace\projects\nResult-task\nResult-task\obj\Debug\nResult_task.Properties.Resources.resources
+E:\c#_workspace\projects\nResult-task\nResult-task\obj\Debug\nResult-task.csproj.GenerateResource.Cache
+E:\c#_workspace\projects\nResult-task\nResult-task\obj\Debug\nResult-task.exe
+E:\c#_workspace\projects\nResult-task\nResult-task\obj\Debug\nResult-task.pdb
