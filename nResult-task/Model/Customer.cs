@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace nResult_task.Model
 {
-    class Customer
+    public class Customer
     {
         public string Gender { get; set; }
         public string Title { get; set; }

@@ -16,7 +16,7 @@ using CsvHelper;
 
 namespace nResult_task.ViewModel
 {
-    class MainViewModel : ViewModelBase
+    public class MainViewModel : ViewModelBase
     {
 
         private IList<Customer> _bindedCustomersList;
