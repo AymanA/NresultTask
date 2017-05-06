@@ -1,0 +1,9 @@
+E:\c#_workspace\projects\nResult-task\nResultUnitTest\bin\Debug\nResultUnitTest.dll
+E:\c#_workspace\projects\nResult-task\nResultUnitTest\bin\Debug\nResultUnitTest.pdb
+E:\c#_workspace\projects\nResult-task\nResultUnitTest\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
+E:\c#_workspace\projects\nResult-task\nResultUnitTest\bin\Debug\nResult-task.exe
+E:\c#_workspace\projects\nResult-task\nResultUnitTest\bin\Debug\nResult-task.pdb
+E:\c#_workspace\projects\nResult-task\nResultUnitTest\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.xml
+E:\c#_workspace\projects\nResult-task\nResultUnitTest\obj\Debug\nResultUnitTest.csprojResolveAssemblyReference.cache
+E:\c#_workspace\projects\nResult-task\nResultUnitTest\obj\Debug\nResultUnitTest.dll
+E:\c#_workspace\projects\nResult-task\nResultUnitTest\obj\Debug\nResultUnitTest.pdb
