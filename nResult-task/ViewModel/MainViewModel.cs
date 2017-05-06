@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Forms;
 using System.Windows.Input;
 using CsvHelper;
 
@@ -117,7 +118,7 @@ namespace nResult_task.ViewModel
             }
         }
 
-        private int _pageSize = 10;
+        private int _pageSize = 15;
 
         public int PageSize
         {
@@ -279,10 +280,16 @@ namespace nResult_task.ViewModel
         private void OpenFile(object obj)
         {
 
+            OpenFileDialog opener = new OpenFileDialog();
+            opener.Filter = "Excel Files| *.xlsx;*.xls;*.csv;";
+            if (opener.ShowDialog() == DialogResult.Cancel)
+                return;
+
             // Create a list buffer
             var myList = new List<Customer>();
             //using (var streamReader = new StreamReader("E:\\nresult-task\\CodeInterview/Interview Name List.csv"))
-            using (var streamReader = new StreamReader("E:\\nresult-task\\CodeInterview/test.csv"))
+            //using (var streamReader = new StreamReader("E:\\nresult-task\\CodeInterview/test.csv"))
+            using (var streamReader = new StreamReader(opener.FileName))
             {
                 string headerLine = streamReader.ReadLine();
                 // browse the csv file line by line until the end of the file

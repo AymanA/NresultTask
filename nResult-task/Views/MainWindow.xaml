@@ -124,6 +124,8 @@
             <TextBox Grid.Row="4" Grid.Column="1" IsEnabled="False" Width="400" Grid.ColumnSpan="4"
                      Text="{Binding SelectedCustomer.EmailAddress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         </Grid>
+        
+       
 
     </Grid>
     
