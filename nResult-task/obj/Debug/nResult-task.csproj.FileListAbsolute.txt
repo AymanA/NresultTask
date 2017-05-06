@@ -14,4 +14,3 @@ E:\c#_workspace\projects\nResult-task\nResult-task\obj\Debug\nResult_task.Proper
 E:\c#_workspace\projects\nResult-task\nResult-task\obj\Debug\nResult-task.csproj.GenerateResource.Cache
 E:\c#_workspace\projects\nResult-task\nResult-task\obj\Debug\nResult-task.exe
 E:\c#_workspace\projects\nResult-task\nResult-task\obj\Debug\nResult-task.pdb
-E:\c#_workspace\projects\nResult-task\nResult-task\obj\Debug\nResult-task.csprojResolveAssemblyReference.cache

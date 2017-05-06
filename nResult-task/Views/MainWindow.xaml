@@ -7,7 +7,7 @@
         xmlns:vm="clr-namespace:nResult_task.ViewModel"
         WindowStartupLocation="CenterScreen"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="900">
+        Title="MainWindow" Height="600" Width="950">
     <Window.DataContext>
         <vm:MainViewModel></vm:MainViewModel>
     </Window.DataContext>
@@ -17,16 +17,19 @@
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
 
         <Button Grid.Row="0" Command="{Binding Path=OpenFileCommand}" HorizontalAlignment="Left" Margin="5">Choose File</Button>
 
 
-        <!--<DataGrid Grid.Row="1" Visibility="{Binding Path=DataGridVisibility, UpdateSourceTrigger=PropertyChanged}" 
-                  AutoGenerateColumns="True"
+        <DataGrid Grid.Row="1" Visibility="{Binding Path=DataGridVisibility, UpdateSourceTrigger=PropertyChanged}" 
+                  AutoGenerateColumns="False" CanUserAddRows="False" SelectionMode="Single"
+                  CanUserDeleteRows="False" IsReadOnly="True"
+                  SelectedItem="{Binding SelectedCustomer, Mode=TwoWay}"
                   ItemsSource="{Binding Path=BindedCustomersList,UpdateSourceTrigger=PropertyChanged}" >
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Gender" Binding="{Binding Gender}"/>
+                <DataGridTextColumn Header="Gender" Binding="{Binding Gender}" />
                 <DataGridTextColumn Header="Title" Binding="{Binding Title}"/>
                 <DataGridTextColumn Header="Occupation" Binding="{Binding Occupation}" />
                 <DataGridTextColumn Header="Company" Binding="{Binding Company}"/>
@@ -36,12 +39,15 @@
                 <DataGridTextColumn Header="BloodType" Binding="{Binding BloodType}"/>
                 <DataGridTextColumn Header="EmailAddress" Binding="{Binding EmailAddress}" />
             </DataGrid.Columns>
-        </DataGrid>-->
-        <DataGrid Visibility="{Binding Path=DataGridVisibility, UpdateSourceTrigger=PropertyChanged}"  Grid.Row="1" AutoGenerateColumns="True" ItemsSource="{Binding Path=BindedCustomersList,UpdateSourceTrigger=PropertyChanged}" >
-            
         </DataGrid>
+        <!--<DataGrid Visibility="{Binding Path=DataGridVisibility, UpdateSourceTrigger=PropertyChanged}"
+                  Grid.Row="1" AutoGenerateColumns="True" CanUserAddRows="False"
+                  ItemsSource="{Binding Path=BindedCustomersList,UpdateSourceTrigger=PropertyChanged}" >
+            
+        </DataGrid>-->
 
-        <Grid Grid.Row="2" Width="300" Visibility="{Binding Path=DataGridVisibility, UpdateSourceTrigger=PropertyChanged}">
+        <Grid Grid.Row="2" Width="300"
+              Visibility="{Binding Path=DataGridVisibility, UpdateSourceTrigger=PropertyChanged}">
             <Button Height="23" HorizontalAlignment="Left" Name="BtnFirst" VerticalAlignment="Bottom"
                     Width="40" Content="&lt;&lt;" Command="{Binding Path=FirstPageCommand}"
                     IsEnabled="{Binding Path=FirstEnabled}" Opacity="0.75"/>
@@ -63,6 +69,60 @@
                     Name="BtnLast" Command="{Binding Path=LastPageCommand}" Opacity="0.75"
                     IsEnabled="{Binding Path=LastEnabled}" Content="&gt;&gt;"/>
                         
+        </Grid>
+
+
+        <Grid Grid.Row="3" Margin="20 20" Visibility="{Binding Path=DataGridVisibility, UpdateSourceTrigger=PropertyChanged}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="20"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <!--row 0 -->
+            <Label Grid.Row="0" Grid.Column="0">Gender:</Label>
+            <TextBox Grid.Row="0" Grid.Column="1" IsEnabled="False" Width="200"
+                     Text="{Binding SelectedCustomer.Gender, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+            <Label Grid.Row="0" Grid.Column="3">Title:</Label>
+            <TextBox Grid.Row="0" Grid.Column="4" IsEnabled="False" Width="200"
+                     Text="{Binding SelectedCustomer.Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <!--row 1 -->
+            <Label Grid.Row="1" Grid.Column="0">Occupation:</Label>
+            <TextBox Grid.Row="1" Grid.Column="1" IsEnabled="False"  Width="200"
+                     Text="{Binding SelectedCustomer.Occupation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+            <Label Grid.Row="1" Grid.Column="3">Comapny:</Label>
+            <TextBox Grid.Row="1" Grid.Column="4" IsEnabled="False"  Width="200"
+                     Text="{Binding SelectedCustomer.Company, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <!--row 2 -->
+            <Label Grid.Row="2" Grid.Column="0">GivenName:</Label>
+            <TextBox Grid.Row="2" Grid.Column="1" IsEnabled="False" Width="200"
+                     Text="{Binding SelectedCustomer.GivenName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+            <Label Grid.Row="2" Grid.Column="3">MiddleInitial:</Label>
+            <TextBox Grid.Row="2" Grid.Column="4" IsEnabled="False" Width="200"
+                     Text="{Binding SelectedCustomer.MiddleInitial, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <!--row 3 -->
+            <Label Grid.Row="3" Grid.Column="0">Surname:</Label>
+            <TextBox Grid.Row="3" Grid.Column="1" IsEnabled="False" Width="200"
+                     Text="{Binding SelectedCustomer.Surname, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+            <Label Grid.Row="3" Grid.Column="3">BloodType:</Label>
+            <TextBox Grid.Row="3" Grid.Column="4" IsEnabled="False" Width="200"
+                     Text="{Binding SelectedCustomer.BloodType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <!--row 4 -->
+            <Label Grid.Row="4" Grid.Column="0">EmailAddress:</Label>
+            <TextBox Grid.Row="4" Grid.Column="1" IsEnabled="False" Width="400" Grid.ColumnSpan="4"
+                     Text="{Binding SelectedCustomer.EmailAddress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         </Grid>
 
     </Grid>

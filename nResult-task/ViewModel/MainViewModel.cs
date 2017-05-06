@@ -45,6 +45,18 @@ namespace nResult_task.ViewModel
             }
         }
 
+        private Customer _selectedCustomer;
+
+        public Customer SelectedCustomer
+        {
+            get { return _selectedCustomer; }
+            set
+            {
+                _selectedCustomer = value;
+                NotifyPropertyChanged("SelectedCustomer");
+            }
+        }
+
 
         private string _dataGridVisibility = "Hidden";
         public string DataGridVisibility
@@ -105,7 +117,7 @@ namespace nResult_task.ViewModel
             }
         }
 
-        private int _pageSize = 20;
+        private int _pageSize = 10;
 
         public int PageSize
         {
@@ -305,7 +317,7 @@ namespace nResult_task.ViewModel
 
             // Convert the list into an observable collection
             Customers = new ObservableCollection<Customer>(myList);
-            PagesCount = Customers.Count/20;
+            PagesCount = Customers.Count/PageSize;
             CurrentPageIndex = 0;
             BindedCustomersList = GetPage(Customers, CurrentPageIndex, PageSize);
             DataGridVisibility = "Visible";
