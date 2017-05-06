@@ -6,11 +6,38 @@
         xmlns:local="clr-namespace:nResult_task"
         xmlns:vm="clr-namespace:nResult_task.ViewModel"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="auto" Width="auto">
     <Window.DataContext>
         <vm:MainViewModel></vm:MainViewModel>
     </Window.DataContext>
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+
+        <Button Grid.Row="0" Command="{Binding OpenFileCommand}" HorizontalAlignment="Left" Margin="5">Choose File</Button>
+
+
+        <DataGrid Grid.Row="1" Visibility="{Binding Path=DataGridVisibility, UpdateSourceTrigger=PropertyChanged}" AutoGenerateColumns="False" ItemsSource="{Binding Path=Customers,UpdateSourceTrigger=PropertyChanged}" >
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Gender" Binding="{Binding Gender}"/>
+                <DataGridTextColumn Header="Title" Binding="{Binding Title}"/>
+                <DataGridTextColumn Header="Occupation" Binding="{Binding Occupation}" />
+                <DataGridTextColumn Header="Company" Binding="{Binding Company}"/>
+                <DataGridTextColumn Header="GivenName" Binding="{Binding GivenName}"/>
+                <DataGridTextColumn Header="MiddleInitial" Binding="{Binding MiddleInitial}" />
+                <DataGridTextColumn Header="Surname" Binding="{Binding Surname}"/>
+                <DataGridTextColumn Header="BloodType" Binding="{Binding BloodType}"/>
+                <DataGridTextColumn Header="EmailAddress" Binding="{Binding EmailAddress}" />
+            </DataGrid.Columns>
+        </DataGrid>
+        <!--<DataGrid Grid.Row="1" AutoGenerateColumns="True" ItemsSource="{Binding Path=Customers,UpdateSourceTrigger=PropertyChanged}" >
+            
+        </DataGrid>-->
+
     </Grid>
+    
+
 </Window>
