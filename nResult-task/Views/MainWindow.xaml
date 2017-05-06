@@ -7,7 +7,7 @@
         xmlns:vm="clr-namespace:nResult_task.ViewModel"
         WindowStartupLocation="CenterScreen"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="950">
+        Title="MainWindow" Height="650" Width="950">
     <Window.DataContext>
         <vm:MainViewModel></vm:MainViewModel>
     </Window.DataContext>
@@ -124,8 +124,12 @@
             <TextBox Grid.Row="4" Grid.Column="1" IsEnabled="False" Width="400" Grid.ColumnSpan="4"
                      Text="{Binding SelectedCustomer.EmailAddress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         </Grid>
-        
-       
+
+        <Grid Row="4" Visibility="{Binding Path=DataGridVisibility, UpdateSourceTrigger=PropertyChanged}">
+            <Button Content="export" Margin="0 0 40 0" HorizontalAlignment="Right" Command="{Binding ExportCustomersCommand}" />
+
+
+        </Grid>
 
     </Grid>
     

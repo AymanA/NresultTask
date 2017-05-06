@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -201,6 +202,7 @@ namespace nResult_task.ViewModel
         public ICommand NextPageCommand { get; set; }
 
         public ICommand OpenFileCommand { get; set; }
+        public ICommand ExportCustomersCommand { get; set; }
 
         #endregion
 
@@ -209,12 +211,55 @@ namespace nResult_task.ViewModel
         public MainViewModel()
         {
            //Customers = GetCustomers();
-            OpenFileCommand = new RelayCommand(OpenFile, (param)=> true);
+            OpenFileCommand = new RelayCommand(GetCustomersData, (param)=> true);
             FirstPageCommand = new RelayCommand(LoadFirstPage, (param)=> true);
             LastPageCommand = new RelayCommand(LoadLastPage, (param)=> true);
             PreviousePageCommand = new RelayCommand(LoadPreviousePage, (param)=> true);
             NextPageCommand = new RelayCommand(LoadNextPage, (param)=> true);
+            ExportCustomersCommand = new RelayCommand(ExportCustomers, (param)=> true);
         }
+
+        private void ExportCustomers(object obj)
+        {
+            var filename = GetExportedFileName();
+
+            WriteCsv(BindedCustomersList, filename);
+        }
+
+        private string GetExportedFileName()
+        {
+            Microsoft.Win32.SaveFileDialog ExportDlg = new Microsoft.Win32.SaveFileDialog();
+            ExportDlg.DefaultExt = ".csv"; // Default file extension
+            ExportDlg.Filter = "Excel Files| *.xlsx;*.xls;*.csv;"; // Filter files by extension
+
+            // Show save file dialog box
+            Nullable<bool> result = ExportDlg.ShowDialog();
+            string filename = string.Empty;
+            // Process save file dialog box results
+            if (result == true)
+            {
+                // Save document
+                filename = ExportDlg.FileName;
+            }
+            return filename;
+        }
+
+        public void WriteCsv<T>(IList<T> items, string path)
+        {
+            Type itemType = typeof(T);
+            var props = itemType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+            using (var writer = new StreamWriter(path))
+            {
+                writer.WriteLine(string.Join(", ", props.Select(p => p.Name)));
+
+                foreach (var item in items)
+                {
+                    writer.WriteLine(string.Join(", ", props.Select(p => p.GetValue(item, null))));
+                }
+            }
+        }
+
 
         private void LoadLastPage(object obj)
         {
@@ -277,57 +322,64 @@ namespace nResult_task.ViewModel
             PageIndex = cureentIndex + " of " + PagesCount;
         }
 
-        private void OpenFile(object obj)
-        {
 
+        private string GetCustomersFilePath()
+        {
             OpenFileDialog ChooseFileDlg = new OpenFileDialog();
             ChooseFileDlg.Filter = "Excel Files| *.xlsx;*.xls;*.csv;";
             if (ChooseFileDlg.ShowDialog() == DialogResult.Cancel)
-                return;
+                return String.Empty;
+            return ChooseFileDlg.FileName;
+        }
 
-            // Create a list buffer
-            var myList = new List<Customer>();
-            //using (var streamReader = new StreamReader("E:\\nresult-task\\CodeInterview/Interview Name List.csv"))
-            //using (var streamReader = new StreamReader("E:\\nresult-task\\CodeInterview/test.csv"))
-            using (var streamReader = new StreamReader(ChooseFileDlg.FileName))
+        private void GetCustomersData(object obj)
+        {
+            string fileName = GetCustomersFilePath();
+
+            if (!string.IsNullOrEmpty(fileName))
             {
-                string headerLine = streamReader.ReadLine();
-                // browse the csv file line by line until the end of the file
-                while (!streamReader.EndOfStream)
+                // Create a list buffer
+                var myList = new List<Customer>();
+                using (var streamReader = new StreamReader(fileName))
                 {
-                    // for each line, split it with the split caractere (that may no be ',')
-                    var readLine = streamReader.ReadLine();
-                    if (readLine != null)
+                    string headerLine = streamReader.ReadLine();
+                    // browse the csv file line by line until the end of the file
+                    while (!streamReader.EndOfStream)
                     {
-                        var splitLine = readLine.Split(',');
-
-                        // map the splitted line with an entity
-                        var myNewCustomer = new Customer()
+                        // for each line, split it with the split caractere (that may no be ',')
+                        var readLine = streamReader.ReadLine();
+                        if (readLine != null)
                         {
-                            Gender = splitLine[0].Trim(),
-                            Title = splitLine[1].Trim(),
-                            Occupation = splitLine[2].Trim(),
-                            Company = splitLine[3].Trim(),
-                            GivenName = splitLine[4].Trim(),
-                            MiddleInitial = splitLine[5].Trim(),
-                            Surname = splitLine[6].Trim(),
-                            BloodType = splitLine[7].Trim(),
-                            EmailAddress = splitLine[8].Trim(),
-                        };
+                            var splitLine = readLine.Split(',');
 
-                        // add the entity  in the list
-                        myList.Add(myNewCustomer);
+                            // map the splitted line with an entity
+                            var myNewCustomer = new Customer()
+                            {
+                                Gender = splitLine[0].Trim(),
+                                Title = splitLine[1].Trim(),
+                                Occupation = splitLine[2].Trim(),
+                                Company = splitLine[3].Trim(),
+                                GivenName = splitLine[4].Trim(),
+                                MiddleInitial = splitLine[5].Trim(),
+                                Surname = splitLine[6].Trim(),
+                                BloodType = splitLine[7].Trim(),
+                                EmailAddress = splitLine[8].Trim(),
+                            };
+
+                            // add the entity  in the list
+                            myList.Add(myNewCustomer);
+                        }
                     }
+                    streamReader.Close();
                 }
-                streamReader.Close();
+                // Convert the list into an observable collection
+                Customers = new ObservableCollection<Customer>(myList);
+                PagesCount = Customers.Count / PageSize;
+                CurrentPageIndex = 0;
+                BindedCustomersList = GetPage(Customers, CurrentPageIndex, PageSize);
+                DataGridVisibility = "Visible";
             }
-
-            // Convert the list into an observable collection
-            Customers = new ObservableCollection<Customer>(myList);
-            PagesCount = Customers.Count/PageSize;
-            CurrentPageIndex = 0;
-            BindedCustomersList = GetPage(Customers, CurrentPageIndex, PageSize);
-            DataGridVisibility = "Visible";
+            
         }
 
 
