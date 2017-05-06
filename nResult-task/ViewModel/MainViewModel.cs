@@ -280,16 +280,16 @@ namespace nResult_task.ViewModel
         private void OpenFile(object obj)
         {
 
-            OpenFileDialog opener = new OpenFileDialog();
-            opener.Filter = "Excel Files| *.xlsx;*.xls;*.csv;";
-            if (opener.ShowDialog() == DialogResult.Cancel)
+            OpenFileDialog ChooseFileDlg = new OpenFileDialog();
+            ChooseFileDlg.Filter = "Excel Files| *.xlsx;*.xls;*.csv;";
+            if (ChooseFileDlg.ShowDialog() == DialogResult.Cancel)
                 return;
 
             // Create a list buffer
             var myList = new List<Customer>();
             //using (var streamReader = new StreamReader("E:\\nresult-task\\CodeInterview/Interview Name List.csv"))
             //using (var streamReader = new StreamReader("E:\\nresult-task\\CodeInterview/test.csv"))
-            using (var streamReader = new StreamReader(opener.FileName))
+            using (var streamReader = new StreamReader(ChooseFileDlg.FileName))
             {
                 string headerLine = streamReader.ReadLine();
                 // browse the csv file line by line until the end of the file
