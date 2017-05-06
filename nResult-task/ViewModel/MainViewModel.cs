@@ -3,6 +3,7 @@ using nResult_task.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -10,6 +11,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Forms;
 using System.Windows.Input;
 using CsvHelper;
@@ -30,6 +32,18 @@ namespace nResult_task.ViewModel
                     _bindedCustomersList = value;
                     NotifyPropertyChanged("BindedCustomersList");
                 }
+            }
+        }
+
+        private IEnumerable<Customer> _customersOperations;
+
+        public IEnumerable<Customer> CustomersOperations
+        {
+            get { return _customersOperations; }
+            set
+            {
+                _customersOperations = value;
+                NotifyPropertyChanged("CustomersOperations");
             }
         }
 
@@ -115,6 +129,7 @@ namespace nResult_task.ViewModel
             set
             {
                 _pagesCount = value;
+                UpdatePagesCount(value);
                 NotifyPropertyChanged("PagesCount");
             }
         }
@@ -203,6 +218,7 @@ namespace nResult_task.ViewModel
 
         public ICommand OpenFileCommand { get; set; }
         public ICommand ExportCustomersCommand { get; set; }
+        public ICommand FilterCommand { get; set; }
 
         #endregion
 
@@ -210,20 +226,24 @@ namespace nResult_task.ViewModel
 
         public MainViewModel()
         {
-           //Customers = GetCustomers();
+            // regarding can execute i made it always can executed and handled the conditions on the properties
+            // there is another aproach which will implement the canexecute for every command both of them is ok for me
+            // but i choosed the first approach just because i think its easier 
+
             OpenFileCommand = new RelayCommand(GetCustomersData, (param)=> true);
             FirstPageCommand = new RelayCommand(LoadFirstPage, (param)=> true);
             LastPageCommand = new RelayCommand(LoadLastPage, (param)=> true);
             PreviousePageCommand = new RelayCommand(LoadPreviousePage, (param)=> true);
             NextPageCommand = new RelayCommand(LoadNextPage, (param)=> true);
             ExportCustomersCommand = new RelayCommand(ExportCustomers, (param)=> true);
+            FilterCommand = new RelayCommand(FilterCustomers, (param)=> true);
         }
 
         private void ExportCustomers(object obj)
         {
             var filename = GetExportedFileName();
 
-            WriteCsv(BindedCustomersList, filename);
+            WriteCsv(CustomersOperations, filename);
         }
 
         private string GetExportedFileName()
@@ -244,7 +264,7 @@ namespace nResult_task.ViewModel
             return filename;
         }
 
-        public void WriteCsv<T>(IList<T> items, string path)
+        public void WriteCsv<T>(IEnumerable<T> items, string path)
         {
             Type itemType = typeof(T);
             var props = itemType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
@@ -267,7 +287,7 @@ namespace nResult_task.ViewModel
             if (CurrentPageIndex != PagesCount)
             {
                 CurrentPageIndex = PagesCount;
-                BindedCustomersList = GetPage(Customers, CurrentPageIndex, PageSize);
+                BindedCustomersList = GetPage(CustomersOperations, CurrentPageIndex, PageSize);
                 NextEnabled = false;
                 LastEnabled = false;
                 FirstEnabled = true;
@@ -278,7 +298,7 @@ namespace nResult_task.ViewModel
         private void LoadNextPage(object obj)
         {
             CurrentPageIndex++;
-            BindedCustomersList = GetPage(Customers, CurrentPageIndex, PageSize);
+            BindedCustomersList = GetPage(CustomersOperations, CurrentPageIndex, PageSize);
             PrevEnabled = true;
             FirstEnabled = true;
             if (CurrentPageIndex == PagesCount)
@@ -292,7 +312,7 @@ namespace nResult_task.ViewModel
         private void LoadPreviousePage(object obj)
         {
             CurrentPageIndex--;
-            BindedCustomersList = GetPage(Customers, CurrentPageIndex, PageSize);
+            BindedCustomersList = GetPage(CustomersOperations, CurrentPageIndex, PageSize);
             NextEnabled = true;
             LastEnabled = true;
             if (CurrentPageIndex == 0)
@@ -307,7 +327,7 @@ namespace nResult_task.ViewModel
             if (CurrentPageIndex != 0)
             {
                 CurrentPageIndex = 0;
-                BindedCustomersList = GetPage(Customers, CurrentPageIndex, PageSize);
+                BindedCustomersList = GetPage(CustomersOperations, CurrentPageIndex, PageSize);
                 NextEnabled = true;
                 LastEnabled = true;
                 PrevEnabled = false;
@@ -318,10 +338,18 @@ namespace nResult_task.ViewModel
 
         private void UpdatePageIndex(int index)
         {
-            var cureentIndex = index++;
-            PageIndex = cureentIndex + " of " + PagesCount;
+            var cureentIndex = index;
+            var cureentCount = PagesCount;
+            PageIndex = (cureentIndex + 1)+ " of " + (cureentCount + 1);
         }
 
+
+        private void UpdatePagesCount(int pagesCount)
+        {
+            var cureentCount = pagesCount;
+            var currentPageIndex = CurrentPageIndex;
+            PageIndex = (currentPageIndex + 1) + " of " + (cureentCount + 1);
+        }
 
         private string GetCustomersFilePath()
         {
@@ -376,15 +404,30 @@ namespace nResult_task.ViewModel
                 Customers = new ObservableCollection<Customer>(myList);
                 PagesCount = Customers.Count / PageSize;
                 CurrentPageIndex = 0;
-                BindedCustomersList = GetPage(Customers, CurrentPageIndex, PageSize);
+                CustomersOperations = Customers;
+                BindedCustomersList = GetPage(CustomersOperations, CurrentPageIndex, PageSize);
                 DataGridVisibility = "Visible";
             }
             
         }
 
-
-        IList<Customer> GetPage(ObservableCollection<Customer> list, int page, int pageSize)
+        private void FilterCustomers(object obj)
         {
+            string filterParam = obj.ToString();
+            //CustomersOperations.Filter = customer =>
+            //{
+            //    Customer c = customer as Customer;
+            //    return c.Gender.ToString().Contains(obj.ToString());
+            //};
+            CustomersOperations = Customers.Where(c => c.Gender.Contains(filterParam));
+            BindedCustomersList = GetPage(CustomersOperations, 0,15);
+
+        }
+
+
+        IList<Customer> GetPage(IEnumerable<Customer> list, int page, int pageSize)
+        {
+            PagesCount = list.Count()/pageSize;
             return list.Skip(page * pageSize).Take(pageSize).ToList();
         }
 

@@ -7,6 +7,10 @@ namespace nResultUnitTest
     [TestClass]
     public class NResultTests
     {
+
+        // i was going to add mocks to make more reliable unit tests
+        // but filter and sort feature took time more than my estimation 
+
         [TestMethod]
         public void TestPagesCount()
         {
