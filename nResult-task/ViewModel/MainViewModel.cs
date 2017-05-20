@@ -8,6 +8,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -32,6 +33,33 @@ namespace nResult_task.ViewModel
                     _bindedCustomersList = value;
                     NotifyPropertyChanged("BindedCustomersList");
                 }
+            }
+        }
+
+        public List<string> _customersHeader = getCustomersHeader();
+
+        private static List<string> getCustomersHeader()
+        {
+            List<string> Headers = new List<string>();
+            Headers.Add("Gender");
+            Headers.Add("Title");
+            Headers.Add("Occupation");
+            Headers.Add("Company");
+            Headers.Add("GivenName");
+            Headers.Add("MiddleInitial");
+            Headers.Add("Surname");
+            Headers.Add("BloodType");
+            Headers.Add("mailAddress");
+            return Headers;
+        }
+
+        public List<string> CustomersHeader
+        {
+            get { return _customersHeader; }
+            set
+            {
+                _customersHeader = value;
+                NotifyPropertyChanged("CustomersHeader");
             }
         }
 
@@ -430,6 +458,40 @@ namespace nResult_task.ViewModel
         private void SortCustomers(object obj)
         {
             string colName = obj.ToString();
+            switch (colName)
+            {
+                case "Gender":
+                    CustomersOperations = from i in Customers orderby i.Gender select i;
+                    break;
+                case "Title":
+                    CustomersOperations = from i in Customers orderby i.Title select i;
+                    break;
+                case "Occupation":
+                    CustomersOperations = from i in Customers orderby i.Occupation select i;
+                    break;
+                case "Company":
+                    CustomersOperations = from i in Customers orderby i.Company select i;
+                    break;
+                case "GivenName":
+                    CustomersOperations = from i in Customers orderby i.GivenName select i;
+                    break;
+                case "MiddleInitial":
+                    CustomersOperations = from i in Customers orderby i.MiddleInitial select i;
+                    break;
+                case "Surname":
+                    CustomersOperations = from i in Customers orderby i.Surname select i;
+                    break;
+                case "BloodType":
+                    CustomersOperations = from i in Customers orderby i.BloodType select i;
+                    break;
+                case "EmailAddress":
+                    CustomersOperations = from i in Customers orderby i.EmailAddress select i;
+                    break;
+                 default:
+                    break;
+
+            }
+            BindedCustomersList = GetPage(CustomersOperations, 0, 15);
         }
 
 
