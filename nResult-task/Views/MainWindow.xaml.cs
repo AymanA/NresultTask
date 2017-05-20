@@ -24,5 +24,17 @@ namespace nResult_task
         {
             InitializeComponent();
         }
+
+        private void datagrid_Sorting(object sender, DataGridSortingEventArgs e)
+        {
+            if (e.Column.Header.Equals("Gender") || e.Column.Header.Equals("Title") ||
+                e.Column.Header.Equals("Occupation") || e.Column.Header.Equals("Company") || 
+                e.Column.Header.Equals("GivenName") || e.Column.Header.Equals("MiddleInitial") ||
+                e.Column.Header.Equals("Surname") || e.Column.Header.Equals("BloodType") ||
+                e.Column.Header.Equals("EmailAddress"))
+            {
+                e.Handled = true;
+            }
+        }
     }
 }

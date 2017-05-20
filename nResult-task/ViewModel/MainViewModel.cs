@@ -219,6 +219,7 @@ namespace nResult_task.ViewModel
         public ICommand OpenFileCommand { get; set; }
         public ICommand ExportCustomersCommand { get; set; }
         public ICommand FilterCommand { get; set; }
+        public ICommand SortCommand { get; set; }
 
         #endregion
 
@@ -237,7 +238,9 @@ namespace nResult_task.ViewModel
             NextPageCommand = new RelayCommand(LoadNextPage, (param)=> true);
             ExportCustomersCommand = new RelayCommand(ExportCustomers, (param)=> true);
             FilterCommand = new RelayCommand(FilterCustomers, (param)=> true);
+            SortCommand = new RelayCommand(SortCustomers, (param)=> true);
         }
+
 
         private void ExportCustomers(object obj)
         {
@@ -422,6 +425,11 @@ namespace nResult_task.ViewModel
             CustomersOperations = Customers.Where(c => c.Gender.Contains(filterParam));
             BindedCustomersList = GetPage(CustomersOperations, 0,15);
 
+        }
+
+        private void SortCustomers(object obj)
+        {
+            string colName = obj.ToString();
         }
 
 
